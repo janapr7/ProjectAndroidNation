@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Nation implements Parcelable {
-    private String name, remarks, photo;
+    private String name, remarks, photo, desc;
 
     public String getName() {
         return name;
@@ -30,6 +30,14 @@ public class Nation implements Parcelable {
         this.photo = photo;
     }
 
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -39,6 +47,7 @@ public class Nation implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.remarks);
         dest.writeString(this.photo);
+        dest.writeString(this.desc);
     }
 
     public Nation() {
@@ -47,6 +56,7 @@ public class Nation implements Parcelable {
         this.name = in.readString();
         this.remarks = in.readString();
         this.photo = in.readString();
+        this.desc = in.readString();
     }
     public static final Parcelable.Creator<Nation> CREATOR = new Parcelable.Creator<Nation>() {
         @Override

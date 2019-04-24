@@ -1,6 +1,7 @@
 package com.example.nationrecycle;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,11 +38,23 @@ public class GridNationAdapter extends RecyclerView.Adapter<GridNationAdapter.Gr
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GridViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull GridViewHolder holder, final int position) {
         Glide.with(context)
                 .load(getListNation().get(position).getPhoto())
                 .apply(new RequestOptions().override(350, 550))
                 .into(holder.imgPhoto);
+
+        holder.imgPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context.getApplicationContext(), DetailActivity.class);
+                i.putExtra("name",getListNation().get(position).getName());
+                i.putExtra("desc",getListNation().get(position).getDesc());
+                i.putExtra("photo",getListNation().get(position).getPhoto());
+                context.startActivity(i);
+
+            }
+        });
     }
 
     @Override

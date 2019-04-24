@@ -1,5 +1,6 @@
 package com.example.nationrecycle;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -50,7 +51,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showSelectedNation(Nation nation) {
-        Toast.makeText(this, "Kamu memilih " + nation.getName(), Toast.LENGTH_SHORT).show();
+        Intent a = new Intent(this, DetailActivity.class);
+        a.putExtra("name", nation.getName());
+        a.putExtra("desc",nation.getDesc());
+        a.putExtra("photo",nation.getPhoto());
+        startActivity(a);
     }
 
     private void showRecyclerList(){

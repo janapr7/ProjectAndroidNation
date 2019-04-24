@@ -1,7 +1,9 @@
 package com.example.nationrecycle;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +42,7 @@ public class CardViewNationAdapter extends RecyclerView.Adapter<CardViewNationAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CardViewViewHolder cardViewViewHolder, int i) {
+    public void onBindViewHolder(@NonNull CardViewViewHolder cardViewViewHolder, final int i) {
         Nation p = getListNation().get(i);
         Glide.with(context)
                 .load(p.getPhoto())
@@ -71,6 +73,7 @@ public class CardViewNationAdapter extends RecyclerView.Adapter<CardViewNationAd
         ImageView imgPhoto;
         TextView tvName, tvRemarks;
         Button btnFavorite, btnShare;
+        CardView cvDetail;
 
         public CardViewViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -80,6 +83,11 @@ public class CardViewNationAdapter extends RecyclerView.Adapter<CardViewNationAd
             tvRemarks = itemView.findViewById(R.id.tv_item_remarks);
             btnFavorite = itemView.findViewById(R.id.btn_set_favorite);
             btnShare = itemView.findViewById(R.id.btn_set_share);
+            cvDetail = itemView.findViewById(R.id.card_view);
         }
     }
 }
+
+
+
+
