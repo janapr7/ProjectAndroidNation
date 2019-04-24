@@ -1,6 +1,9 @@
 package com.example.nationrecycle;
 
-public class Nation {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Nation implements Parcelable {
     private String name, remarks, photo;
 
     public String getName() {
@@ -26,4 +29,33 @@ public class Nation {
     public void setPhoto(String photo) {
         this.photo = photo;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.remarks);
+        dest.writeString(this.photo);
+    }
+
+    public Nation() {
+    }
+    protected Nation(Parcel in) {
+        this.name = in.readString();
+        this.remarks = in.readString();
+        this.photo = in.readString();
+    }
+    public static final Parcelable.Creator<Nation> CREATOR = new Parcelable.Creator<Nation>() {
+        @Override
+        public Nation createFromParcel(Parcel source) {
+            return new Nation(source);
+        }
+        @Override
+        public Nation[] newArray(int size) {
+            return new Nation[size];
+        }
+    };
 }

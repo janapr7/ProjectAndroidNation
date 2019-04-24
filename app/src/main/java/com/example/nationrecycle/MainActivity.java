@@ -7,12 +7,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView rvCategory;
     private ArrayList<Nation> list = new ArrayList<>();
+    final String STATE_TITLE = "state_string";
+    final String STATE_LIST = "state_list";
+    final String STATE_MODE = "state_mode";
+    int mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +28,29 @@ public class MainActivity extends AppCompatActivity {
         rvCategory = findViewById(R.id.rv_category);
         rvCategory.setHasFixedSize(true);
 
-        list.addAll(NationData.getListData());
-        setActionBarTitle("Mode List");
-        showRecyclerList();
+        list = new ArrayList<>();
+
+        //list.addAll(NationData.getListData());
+        //setActionBarTitle("Mode List");
+        //showRecyclerList();
+
+        if (savedInstanceState == null) {
+            setActionBarTitle("Mode List");
+            list.addAll(NationData.getListData());
+            showRecyclerList();
+            mode = R.id.action_list;
+        } else {
+            String stateTitle = savedInstanceState.getString(STATE_TITLE);
+            ArrayList<Nation> stateList = savedInstanceState.getParcelableArrayList(STATE_LIST);
+            int stateMode = savedInstanceState.getInt(STATE_MODE);
+            setActionBarTitle(stateTitle);
+            list.addAll(stateList);
+            setMode(stateMode);
+        }
+    }
+
+    private void showSelectedNation(Nation nation) {
+        Toast.makeText(this, "Kamu memilih " + nation.getName(), Toast.LENGTH_SHORT).show();
     }
 
     private void showRecyclerList(){
@@ -32,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
         ListNationAdapter listNationAdapter = new ListNationAdapter(this);
         listNationAdapter.setListNation(list);
         rvCategory.setAdapter(listNationAdapter);
+
+        ItemClickSupport.addTo(rvCategory).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                showSelectedNation(list.get(position));
+            }
+        });
     }
 
     private void showRecyclerGrid(){
@@ -39,6 +72,13 @@ public class MainActivity extends AppCompatActivity {
         GridNationAdapter gridNationAdapter = new GridNationAdapter(this);
         gridNationAdapter.setListNation(list);
         rvCategory.setAdapter(gridNationAdapter);
+
+        ItemClickSupport.addTo(rvCategory).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                showSelectedNation(list.get(position));
+            }
+        });
     }
 
     private void showRecyclerCardView(){
@@ -59,20 +99,38 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        setMode(item.getItemId());
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void setMode(int selectedMode) {
+        String title = null;
+        switch (selectedMode) {
             case R.id.action_list:
-                setActionBarTitle("Mode List");
+                title = "Mode List";
                 showRecyclerList();
                 break;
+
             case R.id.action_grid:
-                setActionBarTitle("Mode Grid");
+                title = "Mode Grid";
                 showRecyclerGrid();
                 break;
+
             case R.id.action_cardview:
-                setActionBarTitle("Mode CardView");
+                title = "Mode CardView";
                 showRecyclerCardView();
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        mode = selectedMode;
+        setActionBarTitle(title);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(STATE_TITLE, getSupportActionBar().getTitle().toString());
+        outState.putParcelableArrayList(STATE_LIST, list);
+        outState.putInt(STATE_MODE, mode);
     }
 }
